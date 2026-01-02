@@ -1,57 +1,68 @@
 #include <bits/stdc++.h>
 using namespace std;
+void setIO(string name)
+{
+    string inp = name + ".in";
+    string out = name + ".out";
+    freopen(inp.data(), "r", stdin);
+    freopen(out.data(), "w", stdout);
+    cin.tie(0);
+    ios::sync_with_stdio(0);
+}
 int main()
 {
+    setIO("traffic");
     int n;
     cin >> n;
+    vector<string> ramp(n);
+    vector<int> start(n), end(n);
 
-    bool firstHighWayUnit = false;
-    int range = 0, lastAHighWay = 0, lastBHighway = 0;
     for (int i = 0; i < n; i++)
+        cin >> ramp[i] >> start[i] >> end[i];
+
+    int high = 1e7, low = -1e7;
+
+    for (int i = n - 1; i >= 0; i--)
     {
-        string ramp;
-        int a = 0, b = 0;
-        cin >> ramp >> a >> b;
-
-        if (ramp == "off")
+        if (ramp[i] == "none")
         {
-            range -= max(a, b);
-        }
-        else if (ramp == "on")
-        {
-            range += max(a, b);
-        }
-        else if (ramp == "none")
-        {
-            range = 0;
-            lastAHighWay = a;
-            lastBHighway = b;
+            low = max(low, start[i]);
+            high = min(high, end[i]);
         }
 
-        if (ramp == "none" && !firstHighWayUnit)
+        else if (ramp[i] == "off")
         {
-            firstHighWayUnit = true;
-            int AA = lastAHighWay + range, BB = lastBHighway + range;
-            printf("%d %d\n", (AA + lastAHighWay) / 2, (BB + lastBHighway) / 2);
+            low += start[i];
+            high += end[i];
+        }
+        else if (ramp[i] == "on")
+        {
+            low -= end[i];
+            high -= start[i];
+            low = max(0, low);
         }
     }
-    int AA = lastAHighWay + range, BB = lastBHighway + range;
-    printf("A: [%d %d] [%d %d]", AA, BB, lastAHighWay, lastBHighway);
-    printf("%d %d\n", (AA + lastAHighWay) / 2, (BB + lastBHighway) / 2);
+    printf("%d %d\n", low, high);
+    high = 1e7;
+    low = -1e7;
+    for (int i = 0; i < n; i++)
+    {
+        if (ramp[i] == "none")
+        {
+            low = max(low, start[i]);
+            high = min(high, end[i]);
+        }
+        else if (ramp[i] == "on")
+        {
+            low += start[i];
+            high += end[i];
+        }
+        else if (ramp[i] == "off")
+        {
+            low -= end[i];
+            high -= start[i];
+            low = max(0, low);
+        }
+    }
+    printf("%d %d\n", low, high);
 }
-
-/*
-SAMPLE INPUT:
-4
-on 2 2
-off 1 1
-off 5 10
-on 12 14
-none 10 14
-none 11 15
-off 2 3
-SAMPLE OUTPUT:
-10 13
-8 12
-
-*/
