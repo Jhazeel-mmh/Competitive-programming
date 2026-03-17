@@ -1,0 +1,19 @@
+# 1. Ignorar absolutamente todo por defecto
+*
+
+# 2. No ignorar las carpetas (necesario para poder entrar en ellas)
+!*/
+
+# 3. Permitir solo los archivos de código fuente .cpp
+!*.cpp
+
+# 4. (Opcional) Permitir otros archivos importantes
+!.gitignore
+!*.py
+!*.java
+!README.md
+
+# 5. Ignorar archivos específicos que a veces se cuelan
+.DS_Store
+.vscode/
+.idea/
