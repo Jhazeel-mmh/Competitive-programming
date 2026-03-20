@@ -1,6 +1,14 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+long long get(long long a, long long b, long long c, long long m)
+{
+    long long c1 = m / a,
+              c2 = (m / lcm(a, b)) + (m / lcm(a, c)),
+              c3 = m / lcm(lcm(a, b), c);
+    return (c1 - c2 + c3) * 6 + (c2 - (2 * c3)) * 3 + c3 * 2;
+}
+
 int main()
 {
     ios::sync_with_stdio(false);
@@ -11,52 +19,9 @@ int main()
     {
         long long a, b, c, m;
         cin >> a >> b >> c >> m;
-        long long da = m / a,
-                  db = m / b,
-                  dc = m / c;
-
-        long long mcd = gcd(gcd(a, b), c);
-
-        long long la = 0, lb = 0, lc = 0;
-        long long ca = 0, cb = 0, cc = 0;
-        for (long long i = mcd; i <= m; i += mcd)
-        {
-            bool ai, bi, ci;
-            ai = bi = ci = false;
-            if (i % a == 0)
-                ai = true;
-            if (i % b == 0)
-                bi = true;
-            if (i % c == 0)
-                ci = true;
-
-            long long div = (ai + bi + ci);
-            long long lt = 6;
-            if (div)
-                lt /= div;
-            if (ai)
-            {
-                la += lt;
-                ca++;
-            }
-            if (bi)
-            {
-                lb += lt;
-                cb++;
-            }
-            if (ci)
-            {
-                lc += lt;
-                cc++;
-            }
-        }
-        da -= ca;
-        db -= cb;
-        dc -= cc;
-
-        unsigned long long ra = ((unsigned long long)da * 6) + la,
-                           rb = ((unsigned long long)db * 6) + lb,
-                           rc = ((unsigned long long)dc * 6) + lc;
-        printf("%llu %llu %llu\n", ra, rb, rc);
+        long long ra = get(a, b, c, m),
+                  rb = get(b, a, c, m),
+                  rc = get(c, a, b, m);
+        cout << ra << " " << rb << " " << rc << endl;
     }
 }
