@@ -21,30 +21,28 @@ int main()
 
     sort(a.begin(), a.end());
 
-    vector<int> segments;
+    vector<int> can_take_left(n);
 
-    for (int i = 0; i < n; i++)
+    int l = 0, r = 0;
+    for (; l < n; l++)
     {
-        vector<int> currSeg;
-        int l = i, r = i + 1;
-        while (r < n)
-        {
-            if (a[r] - a[l] > k)
-            {
-                l = r;
-                continue;
-            }
-            currSeg.push_back(r + 1 - l);
+        while (r < n && a[r] - a[l] <= k)
             r++;
-        }
-
-        if (currSeg.size() < 2)
-            continue;
-
-        sort(currSeg.rbegin(), currSeg.rend());
-        segments.push_back(currSeg[0] + currSeg[1]);
+        can_take_left[l] = r - l;
     }
 
-    sort(segments.rbegin(), segments.rend());
-    cout << segments[0] << endl;
+    vector<int> max_value_after_i(n + 1, 0);
+
+    for (int i = n - 1; i >= 0; i--)
+    {
+        max_value_after_i[i] = max(can_take_left[i], max_value_after_i[i + 1]);
+    }
+
+    int ans = 0;
+    for (int i = 0; i < n; i++)
+    {
+        ans = max(ans, can_take_left[i] + max_value_after_i[i + can_take_left[i]]);
+    }
+
+    cout << ans;
 }
